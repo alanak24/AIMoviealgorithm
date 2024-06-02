@@ -26,9 +26,9 @@ def impute_missing_values(df):
     df['duration'] = df['duration'].astype(float)
     
     # Handle missing and zero values
-    mean_duration = df['duration'][df['duration'] != 0].mean()
+    median_duration = df['duration'][df['duration'] != 0].median()
     df['duration'].replace(0, np.nan, inplace=True)
-    df['duration'].fillna(mean_duration, inplace=True)
+    df['duration'].fillna(median_duration, inplace=True)
     
     mode_date_added = df['date_added'].mode()[0]
     df['date_added'].fillna(mode_date_added, inplace=True)
@@ -85,11 +85,11 @@ df.to_csv(filename, index=False)
 new_filename = 'amended_netflix_titles.csv'
 df.to_csv(new_filename, index=False)
 
-scaler = StandardScaler()
-df['duration'] = scaler.fit_transform(df[['duration']])
+# scaler = StandardScaler()
+# df['duration'] = scaler.fit_transform(df[['duration']])
 
-standardised_filename = 'standardised_netflix_titles.csv'
-df.to_csv(standardised_filename, index=False)
+# standardised_filename = 'standardised_netflix_titles.csv'
+# df.to_csv(standardised_filename, index=False)
 
 # Extract relevant features for building user profiles and recommendations
 features1 = df[['title','genre','country']]
@@ -98,17 +98,18 @@ features2= df[['title', 'rating', 'duration', 'theme']]
 # Print the first few rows of the features
 print(features1.head())
 print(features2.head())
-# print("Duration column values:")
-# print(df['duration'])
-# # Data visualisations
-# plt.figure(figsize=(10, 6))
-# plt.hist(df['duration'], bins=30, edgecolor='k', alpha=0.7)
-# plt.title('Distribution of Movie Durations')
-# plt.xlabel('Duration (minutes)')
-# plt.ylabel('Number of Movies')
-# plt.grid(True)
-# plt.show()
-# theme_counts = Counter(theme for themes in df['theme'] for theme in themes.split(', ') if theme != 'None')
+
+print("Duration column values:")
+print(df['duration'])
+# Data visualisations
+plt.figure(figsize=(10, 6))
+plt.hist(df['duration'], bins=30, edgecolor='k', alpha=0.7)
+plt.title('Distribution of Movie Durations')
+plt.xlabel('Duration (minutes)')
+plt.ylabel('Number of Movies')
+plt.grid(True)
+plt.show()
+theme_counts = Counter(theme for themes in df['theme'] for theme in themes.split(', ') if theme != 'None')
 
 # # Create a DataFrame from the theme counts
 # theme_counts_df = pd.DataFrame.from_dict(theme_counts, orient='index', columns=['count']).reset_index()
